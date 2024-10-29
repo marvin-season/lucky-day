@@ -20,33 +20,51 @@ const things: Thing[] = [
 ];
 
 const luckyAction = () => {
-  const luckyNumber = parseInt((Math.random() * things.length).toFixed(0));
-  return things[luckyNumber] || null;
+  return new Promise<Thing>(resolve => {
+    setTimeout(() => {
+      const luckyNumber = parseInt((Math.random() * things.length).toFixed(0));
+      resolve(things[luckyNumber]);
+    }, 3000);
+  });
+
 };
 
 export const LuckyCard = () => {
   const [luckyThing, setLuckyThing] = useState<Thing | null>(null);
+  const [loading, setLoading] = useState(false);
 
   return <>
-    <div className={"rounded-lg p-4 flex gap-4 items-center bg-gradient-to-r from-cyan-500 to-blue-500 text-white"}>
+    <div className={"rounded-lg p-4 flex gap-4 items-center bg-gradient-to-r from-purple-500 to-pink-500 text-white"}>
       {
         things.map(thing => {
           return <Fragment key={thing.id}>
             <div
-              className={`px-2 py-1 rounded-lg border-white ${luckyThing?.id === thing.id ? "border" : ""}`}>{thing.name}</div>
+              className={`select-none px-2 py-1 rounded-lg border-white ${luckyThing?.id === thing.id ? "border" : ""}`}>{thing.name}</div>
           </Fragment>;
         })
       }
     </div>
     <div className={"flex-1 rounded-lg bg-gradient-to-r from-sky-200 to-pink-200 flex items-center justify-center"}>
-      <img className={"flex-1"} src={luckyThing?.cover} alt="" />
+      {
+        loading ? <div>Loading</div> :
+          !luckyThing ? <>Pity</> :
+            <img className={"flex-1"} src={luckyThing.cover} alt="" />
+      }
+
     </div>
     <div
-      className={"border rounded-lg p-2 flex justify-center bg-gradient-to-r from-purple-500 to-pink-500 text-white text-xl"}>
-      <div onClick={() => {
-        const lucky = luckyAction();
-        setLuckyThing(lucky);
-      }}>{"GO"}</div>
+      className={"select-none border rounded-lg p-2 flex justify-center bg-blue-400 active:bg-ring-gradient from-cyan-500 to-blue-500 text-white text-xl"}
+      onClick={async () => {
+        setLuckyThing(null);
+        setLoading(true);
+        const lucky = await luckyAction();
+        setLoading(false);
+        if (lucky) {
+          setLuckyThing(lucky);
+        }
+      }}
+    >
+      <div>{"GO"}</div>
     </div>
 
   </>;
