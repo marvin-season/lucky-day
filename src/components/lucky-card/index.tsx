@@ -9,13 +9,28 @@ type Thing = {
 const things: Thing[] = [
   {
     id: 1,
-    name: "iphone",
+    name: "iphone16",
     cover: "/assets/iphone16.png",
   },
   {
     id: 2,
     name: "watch",
+    cover: "/assets/watch.jpg",
+  },
+  {
+    id: 3,
+    name: "macbook",
     cover: "/assets/iphone16.png",
+  },
+  {
+    id: 4,
+    name: "ipad",
+    cover: "/assets/ipad.png",
+  },
+  {
+    id: 5,
+    name: "ipad",
+    cover: "/assets/ipad.png",
   },
 ];
 
@@ -34,12 +49,15 @@ export const LuckyCard = () => {
   const [loading, setLoading] = useState(false);
 
   return <>
-    <div className={"rounded-lg p-4 flex gap-4 items-center bg-gradient-to-r from-purple-500 to-pink-500 text-white"}>
+    <div className={"rounded-lg p-4 flex gap-4 items-center bg-gradient-to-r from-purple-500 to-pink-500 text-white overflow-x-scroll"}>
       {
         things.map(thing => {
           return <Fragment key={thing.id}>
             <div
-              className={`select-none px-2 py-1 rounded-lg border-white ${luckyThing?.id === thing.id ? "border" : ""}`}>{thing.name}</div>
+              className={`flex-shrink-0 flex items-center
+              select-none w-16 h-16 px-2 py-1 rounded-lg border-white ${luckyThing?.id === thing.id ? "border" : ""}`}>
+              <img src={thing.cover} alt="" />
+            </div>
           </Fragment>;
         })
       }
