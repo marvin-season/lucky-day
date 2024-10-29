@@ -1,4 +1,4 @@
-import { Fragment, useState } from "react";
+import { Fragment, useEffect, useRef, useState } from "react";
 
 type Thing = {
   id: number;
@@ -29,6 +29,31 @@ const things: Thing[] = [
   },
   {
     id: 5,
+    name: "iphone16",
+    cover: "/assets/iphone16.png",
+  },
+  {
+    id: 6,
+    name: "ipad",
+    cover: "/assets/ipad.png",
+  },
+  {
+    id: 7,
+    name: "iphone16",
+    cover: "/assets/iphone16.png",
+  },
+  {
+    id: 8,
+    name: "ipad",
+    cover: "/assets/ipad.png",
+  },
+  {
+    id: 9,
+    name: "watch",
+    cover: "/assets/watch.jpg",
+  },
+  {
+    id: 10,
     name: "ipad",
     cover: "/assets/ipad.png",
   },
@@ -46,20 +71,39 @@ const luckyAction = () => {
 export const LuckyCard = () => {
   const [luckyThing, setLuckyThing] = useState<Thing | null>(null);
   const [loading, setLoading] = useState(false);
+  const thingsContainerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (luckyThing) {
+      const current = thingsContainerRef.current;
+      if (current) {
+        for (const child of current.children) {
+          if (child.id === `thing_${luckyThing.id}`) {
+            child.scrollIntoView({
+              behavior: "smooth",
+              inline: "center",
+            });
+          }
+        }
+      }
+    }
+  }, [luckyThing]);
 
   return (
     <>
       <div
+        ref={thingsContainerRef}
         className={
-          "rounded-lg p-4 flex gap-4 items-center bg-gradient-to-r from-purple-500 to-pink-500 text-white overflow-x-scroll"
+          "flex-shrink-0 rounded-lg p-4 flex gap-4 items-center bg-gradient-to-r from-purple-500 to-pink-500 text-white overflow-x-scroll"
         }
       >
         {things.map((thing) => {
           return (
             <Fragment key={thing.id}>
               <div
+                id={`thing_${thing.id}`}
                 className={`flex-shrink-0 flex items-center
-              select-none w-16 h-16 px-2 py-1 rounded-lg border-white ${luckyThing?.id === thing.id ? "border" : ""}`}
+              select-none w-20 h-20 px-2 py-1 rounded-lg border-white ${luckyThing?.id === thing.id ? "border" : ""}`}
                 onClick={() => {
                   setLuckyThing(thing);
                 }}
@@ -72,7 +116,7 @@ export const LuckyCard = () => {
       </div>
       <div
         className={
-          "flex-1 rounded-lg bg-gradient-to-r from-sky-200 to-pink-200 flex items-center justify-center"
+          "flex-grow rounded-lg bg-gradient-to-bl from-pink-400 to-blue-500 flex flex-col items-center justify-center p-[2px]"
         }
       >
         {loading ? (
@@ -80,7 +124,25 @@ export const LuckyCard = () => {
         ) : !luckyThing ? (
           <>Pity</>
         ) : (
-          <img className={"flex-1"} src={luckyThing.cover} alt="" />
+          <>
+            <div className={"h-2/3 w-full overflow-scroll flex items-center justify-center rounded-t-[6px]"}>
+              <img width={260} height={260} src={luckyThing.cover} alt="" />
+            </div>
+            <div
+              className={
+                "rounded-b-[6px] bg-white h-1/3 px-4 py-6 w-full"
+              }
+            >
+              <div className={"mb-2"}>
+                <span className={"font-bold"}>{'奖品名称:'}</span>
+                <span className={"ml-2"}>{luckyThing.name}</span>
+              </div>
+              <div className={"mb-2"}>
+                <span className={"font-bold"}>{"奖品价值:"}</span>
+                <span className={"ml-2 italic"}>{"$999"}</span>
+              </div>
+            </div>
+          </>
         )}
       </div>
       <div

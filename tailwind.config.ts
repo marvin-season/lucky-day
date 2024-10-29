@@ -5,7 +5,7 @@ export default {
   theme: {
     extend: {
       backgroundImage: {
-        "ring-gradient": "conic-gradient(from 0deg, #a855f7, #ec4899, #a855f7)",
+        "ring-gradient": "conic-gradient(from 0deg, #a855f7, #ee4899, #a855f7)",
       },
     },
   },
